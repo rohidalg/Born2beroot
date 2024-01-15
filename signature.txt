@@ -1,0 +1,22 @@
+#!/bin/bash
+
+#ARQUITECTURA == arquitectura del SO y su versión de kernel exceptuando si el tipo de procesador es desconocido o la plataforma de hardware.
+uname -a
+
+#CPU FISICA == muestra el numero de nucleos fisicos, con el comando grep buscaremos dentro del fichero "physical id" y con wc -l contaremos las líneas del resultado de grep.
+#-------------- si tiene mas de 1 procesador nos dira toda su informacion, por eso le pedimos que nos lea las lineas.
+grep "physical id" /proc/cpuinfo | wc -l
+
+#CPU VIRTUAL == lo mismo de antes.
+grep processor /proc/cpuinfo | wc -l
+
+#RAM == free nos enseña todo sobre la ram, asi que lo ponemos con --mega para que nos lo de en MB, awk es para procesar datos basados en archivos de texto,
+#-------comparar si la primera palabra de una fila es igual a "Mem:" printaremos la tercera palabra de esa fila que será la memoria usada. Para la memoria total cambiaremos
+#-------a la 2 palabra. Por ultimo printearemos el % de memoria usada, con solamente 2 decimales.
+free --mega | awk '$1 == "mem:" {print $3}'
+free --mega | awk '$1 == "mem:" {print $2}'
+free --mega | awk '$1 == "mem:" {printf("(%.2f%%)\n", $3/$2*100)}'
+
+#MEMORIA DEL DISCO == utilizaremos el comando dfque significa "disk filesystem" y haremos un grep con el flag -v para eliminar las líneas que contienen "/boot",
+#---------------------y con awk sumaremos el valor de la tercera palabra de cada linea.
+
