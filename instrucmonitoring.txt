@@ -33,4 +33,20 @@ printf "%.1f" (nombre de arriba)
 #ULTIMO REINICIO == el who -b nos mastrara el tiempo del ultimo arranque con el awk filtraremos para lo que necesitamos.
 who -b | awk '$1 == "system" {print $3 " " $4}'
 
-#LVM == lsblk nos dice todos los dispositivos de bloque,
+#LVM == lsblk nos dice todos los dispositivos de bloque, y haremos un if para un si/no dependiendo de cuantas lineas nos de.
+if [ $(lsblk | grep "lvm" | wc -l) -gt 0 ]; then echo yes; else echo no; fi
+
+#CONEXIONES TPC == utilizando el comando ss podremos ver el numero de conexiones filtrando con -ta, haremosun grep para ver solo las establecidas, y un wc -l para contar el 
+#------------------numero de lineas.
+ss -ta | grep ESTAB | wc -l
+
+#NUMERO DE USUARIOS == con el comando users nos mostrara el nombre del usuario, y con wc -w contara la cantidad de palabras que salen.
+users | wc -w
+
+#DIRECCION IP Y MAC == para saber el host usaremos el hostname -I, y para la mac ip link que muestra o modifica las interfaces de red.
+hostname -I
+ip link | grep "link/ether" | awk '{print $2}'
+
+#N DE COMANDOS SUDO == jornalctl nos dice los registros del sistema, _COMM=sudo para filtrar su ruta, con el grep COMMAND solo apareceran las lineas de comandos, y con wc -l
+#----------------------para enumerar las lineas.
+journalctl _COMM=sudo | grep COMMAND | wc -l
