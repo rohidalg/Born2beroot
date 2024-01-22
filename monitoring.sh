@@ -10,15 +10,15 @@ rammemu=$(free --mega | awk '$1 == "Mem:" {print $3}')
 rammemt=$(free --mega | awk '$1 == "Mem:" {print $2}')
 rammempu=$(free --mega | awk '$1 == "Mem:" {printf("(%.2f%%)\n", $3/$2*100)}')
 
-memdisku=$(df -m | grep "/dev/" | grep -v "/boot" | awk '{memdisku += $3} END {print memdi>
-memdiskt=$(df -m | grep "/dev/" | grep -v "/boot" | awk '{memdiskt += $2} END {printf ("%.>
-memdiskpu=$(df -m | grep "/dev/" | grep -v "/boot" | awk '{memdisku += $3} {memdiskt += $2>
+memdisku=$(df -m | grep "/dev/" | grep -v "/boot" | awk '{memdisku += $3} END {print memdisku}')
+memdiskt=$(df -m | grep "/dev/" | grep -v "/boot" | awk '{memdiskt += $2} END {printf ("%.1fGb\n"), memdiskt/1024}')
+memdiskpu=$(df -m | grep "/dev/" | grep -v "/boot" | awk '{memdisku += $3} {memdiskt += $2} END {printf ("%d"), memdisku/memdiskt*100}')
 
 cpupu=$(vmstat 1 2 | tail -1 | awk '{printf $15}')
 cpuresta=$(expr 100 - $cpupu)
 cpuresult=$(printf "%.1f" $cpuresta)
 
-lastboot=$(who -b | awk '$1 == "system" {print $3 " " $4}')
+lastboot=$(who -b | awk '$3 == "sistema" {print $4 " " $5}')
 
 lvm=$(if [ $(lsblk | grep "lvm" | wc -l) -gt 0 ]; then echo yes; else echo no; fi)
 
@@ -31,10 +31,10 @@ mac=$(ip link | grep "link/ether" | awk '{print $2}')
 
 sudo=$(journalctl _COMM=sudo | grep COMMAND | wc -l)
 
-wall "  Architecture: $arch
+wall -n "  Architecture: $arch
         CPU physical: $cpufi
         vCPU: $cpuvi
-        Memory Usage: $rammemu/${rammemt}MB ($rammempu%)
+        Memory Usage: $rammemu/${rammemt}MB $rammempu
         Disk Usage: $memdisku/${memdiskt} ($memdiskpu%)
         CPU load: $cpuresult%
         Last boot: $lastboot
