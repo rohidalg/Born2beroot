@@ -1,0 +1,297 @@
+# Que es una maquina virtual??
+
+Es un software que simula un ordenador real y que permite crear multiples entornos simulados.
+
+# Porque he elegido debian??
+
+Porque tiene buena disponibilidad, facil de usar y que tiene mas tutoriales de como usarlo .
+
+# Diferencias de debian y rocky
+
+DEBIAN ⇒ fue un proyecto que nacio de la comunidad para gente que no conoce del tema, con actualizaciones frecuentes. 
+
+ROCKY ⇒ surgio para reemplazar otro sistema, preparado para gente profesional, con menos actualizaciones pero mas estables.
+
+| Característica | Debian | Rocky Linux | Explicación sencilla |
+| --- | --- | --- | --- |
+| Origen | Proyecto comunitario | Alternativa a CentOS | Debian nació de la comunidad, Rocky surgió para reemplazar otro sistema |
+| Facilidad de uso | Más amigable para principiantes | Orientado a usuarios avanzados | Debian es como un coche automático, Rocky como uno manual |
+| Actualizaciones | Frecuentes | Menos frecuentes, más estables | Debian se actualiza como un smartphone, Rocky como un electrodoméstico |
+| Soporte | Amplia comunidad | Enfocado en empresas | Debian tiene muchos amigos que ayudan, Rocky tiene expertos contratados |
+
+# Diferencias de apt y aptitude
+
+APT ⇒ es una terminal, que SUGIERE soluciones, que instala y actualiza, y es directamente instalar lo que necesitas.
+
+APTITUDE ⇒ es una terminal y una GUI (interfaz grafica), que RESUELVE problemas y busca paquetes que te hagan falta.
+
+| Característica | APT | Aptitude | Explicación sencilla |
+| --- | --- | --- | --- |
+| Interfaz | Línea de comandos | Línea de comandos y GUI (interfaz grafica) | APT es como usar el terminal, Aptitude puede usar terminal o ventanas |
+| Resolución de dependencias | Básica | Avanzada | APT sugiere soluciones, Aptitude las resuelve automáticamente |
+| Funcionalidad | Gestión de paquetes | Gestión de paquetes y búsqueda | APT instala y actualiza, Aptitude también busca paquetes fácilmente |
+| Facilidad de uso | Más directo | Más opciones, potencialmente complejo | APT es como un cuchillo, Aptitude es como una navaja suiza |
+
+# Cual es el proposito de las VM??
+
+Proporcionan un entorno de ejecucion independiente de nuestro sistema operativo, que oculte los detalles de la plataforma original.
+
+# Que es APPArmor??
+
+Modulo de seguridad que permite al administrador del sistema restringir las capacidades de un programa.
+
+# Que es LVM??
+
+Gestor de volumenes logicos, Es como un organizador inteligente que te permite usar el espacio de manera más eficiente y flexible que dividir el disco duro.
+
+# Politica de contraseñas
+
+```c
+minlen=10 ➤ La cantidad mínima de caracteres que debe contener la contraseña.
+```
+
+```c
+ucredit=-1 ➤ Como mínimo debe contener una letra mayúscula. Ponemos el - ya
+que debe contener como mínimo un carácter, si ponemos + nos referimos a como máximo
+esos caracteres.
+```
+
+```c
+dcredit=-1 ➤ Como mínimo debe contener un dígito.
+```
+
+```c
+lcredit=-1 ➤ Como mínimo debe contener una letra minúscula.
+```
+
+```c
+maxrepeat=3 ➤ No puede tener más de 3 veces seguidas el mismo carácter.
+```
+
+```c
+reject_username ➤ No puede contener el nombre del usuario.
+```
+
+```c
+difok=7 ➤ Debe tener al menos 7 caracteres que no sean parte de la antigua contraseña.
+```
+
+```c
+enforce_for_root ➤ Implementaremos esta política para el usuario root.
+```
+
+![Screen Shot 2024-02-26 at 5.04.06 PM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/a8fce616-b49f-4018-9ca3-c1ced2c9697c/0e0e3c4c-c4aa-4bfc-8db3-44c3925d7ef0/Screen_Shot_2024-02-26_at_5.04.06_PM.png)
+
+# SCRYPT
+
+```c
+uname -a
+```
+
+ARQUITECTURA == arquitectura del SO y su versión de kernel exceptuando si el tipo de procesador es desconocido o la plataforma de hardware.
+
+```c
+grep "physical id" /proc/cpuinfo | wc -l
+```
+
+CPU FISICA == muestra el numero de nucleos fisicos, con el comando grep buscaremos dentro del fichero "physical id", y con wc -l contaremos las líneas del resultado de grep. si tiene mas de 1 procesador nos dira toda su informacion, por eso le pedimos que nos lea las lineas.
+
+```c
+grep processor /proc/cpuinfo | wc -l
+```
+
+CPU VIRTUAL == lo mismo de antes.
+
+```c
+free --mega | awk '$1 == "mem:" {print $3}'
+free --mega | awk '$1 == "mem:" {print $2}' 
+free --mega | awk '$1 == "mem:" {printf("(%.2f%%)\n", $3/$2*100)}'
+```
+
+RAM == free nos enseña todo sobre la ram, asi que lo ponemos con --mega para que nos lo de en MB, awk es para procesar datos basados en archivos de texto, comparar si la primera palabra  de una fila es igual a "Mem:", printaremos la tercera palabra de esa fila que será la memoria usada. Para la memoria total cambiaremos a la 2 palabra. Por ultimo printaremos el % de memoria usada,  con solamente 2 decimales.
+
+```c
+df -m | grep "/dev/" | grep -v "/boot" | awk '{disk_u += $3} END {print disk_u}'
+df -m | grep "/dev/" | grep -v "/boot" | awk '{disk_t += $2} END {printf ("%.1fGb\n"), disk_t/1024}'
+df -m | grep "/dev/" | grep -v "/boot" | awk '{disk_u += $3} {disk_t += $2} END {printf ("%d"), disk_u/disk_t*100}
+```
+
+MEMORIA DEL DISCO == utilizaremos el comando df que significa "disk filesystem" y haremos un grep con el flag -v  para eliminar las líneas que contienen "/boot", y con awk sumaremos el valor de la tercera palabra de cada linea. Para el espacio total sumaremos $2 y $3 y lo dividiremos entre 1024 porque nos lo piden GB y quitaremos los decimales y por ultimo un porcentaje de la memoria usada y la total.
+
+```c
+vmstat 1 2 | tail -1 | awk '{printf $15}'
+expr 100 - (nombre de arriba)
+printf "%.1f" (nombre de arriba)
+```
+
+PORCENTAJE USO DE CPU == vmstat muestra estadisticas del sistema, y pondremos un intervalo de 1-2 segundos,  el tail -1 nos printeara la ultima linea, y pritearemos solo la palabra 15 que es  el uso de memoria.
+
+```c
+who -b | awk '$1 == "system" {print $3 " " $4}'
+```
+
+ULTIMO REINICIO == el who -b nos mostrara el tiempo del ultimo arranque, con el awk filtraremos para lo que necesitamos.
+
+```c
+if [ $(lsblk | grep "lvm" | wc -l) -gt 0 ]; then echo yes; else echo no; fi
+```
+
+LVM == lsblk nos dice todos los dispositivos de bloque, y haremos un if para un si/no dependiendo de cuantas lineas nos de.
+
+```c
+ss -ta | grep ESTAB | wc -l
+```
+
+CONEXIONES TPC == utilizando el comando ss podremos ver el numero de conexiones filtrando con -ta, haremos un grep  para ver solo las ESTABLECIDAS, y un wc -l para contar el numero de lineas.
+
+```c
+users | wc -w
+```
+
+NUMERO DE USUARIOS == con el comando users nos mostrara el nombre del usuario, y con wc -w contara la cantidad de palabras que salen.
+
+```c
+hostname -I
+ip link | grep "link/ether" | awk '{print $2}'
+```
+
+DIRECCION IP Y MAC == para saber el host usaremos el hostname -I, y para la mac, ip link que muestra o modifica las interfaces  de red.
+
+```c
+journalctl _COMM=sudo | grep COMMAND | wc -l
+```
+
+#N DE COMANDOS SUDO == jornalctl nos dice los registros del sistema, _COMM=sudo para filtrar su ruta, con el grep COMMAND  solo apareceran las lineas de comandos, y con wc -l para enumerar las lineas.
+
+# COMANDOS DE EVAULACION
+
+### comprobar que no haya una interfaz grafica
+
+```c
+ls /usr/bin/*session
+```
+
+### comprobar que UFW esta en uso
+
+Firewall diseñado para bloquear acceso no autorizado y permitiendo communicaciones autorizadas
+
+```c
+sudo ufw status
+sudo service ufw status
+```
+
+### comprobar que ssh esta en uso
+
+ssh Es un protocolo que permite el acceso remoto a un servidor por un canal seguro en el que la información está cifrada
+
+```c
+sudo service ssh status
+```
+
+### comprobar el debian
+
+```c
+uname -v
+```
+
+### comprobar que tu usuario este dentro de “sudo” “user42”
+
+```c
+getent group sudo
+getent group user42
+```
+
+### crear nuevo ususario
+
+```c
+sudo adduser name_user
+```
+
+### nuevo grupo para la evaulacion
+
+```c
+sudo addgroup evaluating
+```
+
+### añadir el usuario al grupo
+
+```c
+sudo adduser name_user evaluating
+getent group evaluating
+```
+
+### comprobar hostname
+
+```c
+hostname
+```
+
+### cambiar el hostname
+
+```c
+sudo nano /etc/hostname
+sudo nano /etc/hosts
+sudo reboot
+```
+
+### comprobar las particiones
+
+```c
+lsblk
+```
+
+### comprobar que sudo esta instalado
+
+```c
+dpkg -s sudo
+which sudo
+```
+
+### introducimos al nuevo usuario en sudo
+
+```c
+sudo adduser name_user sudo
+getent group sudo
+```
+
+### comprobar el historial de sudos
+
+```c
+cd /var/log/sudo
+ls
+cat sudo_config
+```
+
+### comprobar los puertos de UFW
+
+```c
+sudo ufw status numbered
+sudo ufw allow 8080
+sudo ufw delete (posicion del numero que queramos borrar)
+```
+
+### comprobar que ssh esta instalado y funciona en el puerto 2424
+
+```c
+which ssh
+sudo service ssh status
+```
+
+### comprobar que desde otra terminal no podemos meternos en el ususario root
+
+```c
+ssh root@localhost -p 2424
+ssh newuser@localhost -p 2424
+```
+
+### modificamos el crontab de 10 min a 1 y paralo sin etrar al scrypt
+
+```c
+sudo crontab -u root -e
+sudo /etc/init.d/cron stop
+sudo /etc/init.d/cron start
+```
+
+# Que es cron?
+
+ servicio que se encarga de automatizar la ejecución de scripts usando la herramienta crontab, lo ejecuta en X tiempo
